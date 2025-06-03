@@ -1,12 +1,18 @@
 package uni.unitravelplaner.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
+import java.util.Collection;
+import java.util.Set;
 
 @Entity
-@Table(name = "_cars")
+@Table(name = "cars")
 @Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Car {
     @Id
     @GeneratedValue
@@ -14,14 +20,22 @@ public class Car {
 
     private String name;
     private String model;
+    private String make;
 
-    private float fuelConsumption;
-    private float fuelCapacity;
+    @Setter
+    private Float fuelConsumption;
+    @Setter
+    private Float fuelCapacity;
 
-    private int seats;
+    @Setter
+    private Integer seats;
 
     @Setter
     @ManyToOne
     @JoinColumn(name = "owner_id")
+    @JsonIgnoreProperties("cars")
     private User owner;
+
+    @ManyToMany(mappedBy = "cars")
+    private Set<Trip> trips;
 }
