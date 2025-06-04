@@ -2,6 +2,7 @@ package uni.unitravelplaner.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import uni.unitravelplaner.enums.AttendeeStatus;
 
 import java.util.Collection;
 
@@ -15,6 +16,8 @@ public class Attendee {
     @Id
     @GeneratedValue
     private Long id;
+
+    private AttendeeStatus status = AttendeeStatus.INVITED;
 
     @Setter
     @ManyToOne
