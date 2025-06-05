@@ -3,9 +3,11 @@ package uni.unitravelplaner.service;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import uni.unitravelplaner.dto.car.CarCreationDto;
 import uni.unitravelplaner.entity.Car;
+import uni.unitravelplaner.entity.Trip;
 import uni.unitravelplaner.entity.User;
 import uni.unitravelplaner.repository.CarRepository;
 
@@ -55,5 +57,11 @@ public class CarService {
         }
 
         return carRepository.save(car);
+    }
+
+    public Page<Car> getCarPageForUser(Long id, Pageable pageable) {
+        final var user = userService.getUser(id);
+
+        return carRepository.findCarsByOwner(user, pageable);
     }
 }

@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.*;
 import uni.unitravelplaner.dto.car.CarCreationDto;
 import uni.unitravelplaner.dto.user.UserCreationDto;
 import uni.unitravelplaner.entity.Car;
+import uni.unitravelplaner.entity.Trip;
 import uni.unitravelplaner.entity.User;
 import uni.unitravelplaner.service.CarService;
+import uni.unitravelplaner.service.TripService;
 import uni.unitravelplaner.service.UserService;
 
 @AllArgsConstructor
@@ -20,8 +22,10 @@ import uni.unitravelplaner.service.UserService;
 public class UserController {
 
     private final UserService userService;
+    private final CarService carService;
+    private final TripService tripService;
 
-    @PostMapping("")
+    @PostMapping({"", "/"})
     public ResponseEntity<User> postUser(@RequestBody UserCreationDto dto) {
         return ResponseEntity.ok(userService.createUser(dto));
     }
@@ -34,5 +38,16 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<User> getUser(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUser(id));
+    }
+
+    @GetMapping("/{id}/cars")
+    public Page<Car> getCars(@PathVariable Long id, Pageable pageable)
+    {
+        return carService.getCarPageForUser(id, pageable);
+    }
+
+    @GetMapping("/{id}/trips")
+    public Page<Trip> getTripsPage(@PathVariable Long id, Pageable pageable){
+        return tripService.getTripsPageForUser(id, pageable);
     }
 }

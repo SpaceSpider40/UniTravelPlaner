@@ -1,5 +1,6 @@
 package uni.unitravelplaner.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
@@ -23,14 +24,14 @@ public class User {
     private ZonedDateTime created;
 
     @OneToMany(mappedBy = "owner")
-    @JsonIgnoreProperties("owner")
+    @JsonIgnore
     private Set<Car> cars;
 
     @OneToMany(mappedBy = "user")
-    @JsonIgnoreProperties("user")
+    @JsonIgnore
     private Set<Attendee> attendees;
 
     @OneToMany(mappedBy = "organizer")
-    @JsonIgnoreProperties("organizer")
+    @JsonIgnore
     private Set<Trip> organizedTrips;
 }

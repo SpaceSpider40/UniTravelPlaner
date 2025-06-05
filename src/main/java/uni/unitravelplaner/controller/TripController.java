@@ -18,7 +18,7 @@ public class TripController {
 
     private final TripService tripService;
 
-    @PostMapping("")
+    @PostMapping({"","/"})
     public ResponseEntity<Trip> postTrip(@RequestBody TripCreationDto dto) {
         return ResponseEntity.ok(tripService.createTrip(dto));
     }

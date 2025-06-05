@@ -3,6 +3,7 @@ package uni.unitravelplaner.service;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import uni.unitravelplaner.dto.trip.TripCreationDto;
 import uni.unitravelplaner.entity.Attendee;
@@ -75,5 +76,11 @@ public class TripService {
         tripRepository.save(trip);
 
         return newAttendee;
+    }
+
+    public Page<Trip> getTripsPageForUser(Long id, Pageable pageable) {
+        final var user = userService.getUser(id);
+
+        return tripRepository.findAllByOrganizer(user, pageable);
     }
 }
