@@ -3,7 +3,9 @@ package uni.unitravelplaner.service;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import uni.unitravelplaner.dto.user.UserCreationDto;
 import uni.unitravelplaner.entity.User;
 import uni.unitravelplaner.repository.UserRepository;
@@ -23,6 +25,10 @@ public class UserService {
 
     public Page<User> getUserPage(PageRequest pageRequest) {
         return userRepository.findAll(pageRequest);
+    }
+
+    public Page<User> getUserPage(Pageable pageable) {
+        return userRepository.findAll(pageable);
     }
 
     public User createUser(UserCreationDto dto) {

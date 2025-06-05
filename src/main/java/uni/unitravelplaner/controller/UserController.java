@@ -3,6 +3,8 @@ package uni.unitravelplaner.controller;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uni.unitravelplaner.dto.car.CarCreationDto;
@@ -25,10 +27,8 @@ public class UserController {
     }
 
     @GetMapping("")
-    public Page<User> getUserPage(@RequestParam int page, @RequestParam int size) {
-        final var pageRequest = PageRequest.of(page, size);
-
-        return userService.getUserPage(pageRequest);
+    public Page<User> getUserPage(Pageable pageable) {
+        return userService.getUserPage(pageable);
     }
 
     @GetMapping("/{id}")

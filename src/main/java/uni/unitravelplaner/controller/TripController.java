@@ -2,6 +2,8 @@ package uni.unitravelplaner.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uni.unitravelplaner.dto.trip.TripCreationDto;
@@ -27,8 +29,11 @@ public class TripController {
     }
 
     @GetMapping
-    public Page<Trip> getTripPage(@RequestParam int page, @RequestParam int size) {
-        return tripService.getTripPage(page, size);
+    public Page<Trip> getTripPage(@RequestParam int page, @RequestParam int size, @RequestParam(defaultValue = "startDate") String sort, @RequestParam(defaultValue = "DESC") String direction) {
+
+        final var pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort));
+
+        return tripService.getTripPage(pageRequest);
     }
 
     @GetMapping("/{id}")
