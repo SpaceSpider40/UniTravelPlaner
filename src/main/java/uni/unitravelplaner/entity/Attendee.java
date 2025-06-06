@@ -2,6 +2,7 @@ package uni.unitravelplaner.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import uni.unitravelplaner.enums.AttendeeStatus;
 
 import java.util.Collection;
@@ -17,6 +18,8 @@ public class Attendee {
     @GeneratedValue
     private Long id;
 
+    @Setter
+    @Enumerated(EnumType.STRING)
     private AttendeeStatus status = AttendeeStatus.INVITED;
 
     @Setter

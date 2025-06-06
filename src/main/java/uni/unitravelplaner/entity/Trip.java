@@ -36,7 +36,7 @@ public class Trip
     @JsonIgnoreProperties("organizedTrips")
     private User organizer;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JsonIgnoreProperties("trip")
     private Set<Attendee> attendees;
 

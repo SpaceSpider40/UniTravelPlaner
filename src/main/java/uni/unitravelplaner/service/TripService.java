@@ -9,6 +9,7 @@ import uni.unitravelplaner.dto.trip.TripCreationDto;
 import uni.unitravelplaner.entity.Attendee;
 import uni.unitravelplaner.entity.Trip;
 import uni.unitravelplaner.entity.User;
+import uni.unitravelplaner.enums.AttendeeStatus;
 import uni.unitravelplaner.repository.TripRepository;
 
 import java.time.Instant;
@@ -68,12 +69,13 @@ public class TripService {
 
         final var newAttendee = Attendee.builder()
                                      .user(user)
+                .status(AttendeeStatus.INVITED)
                                      .build();
 
         final var attendees = trip.getAttendees();
         attendees.add(newAttendee);
 
-        tripRepository.save(trip);
+        tripRepository.saveAndFlush(trip);
 
         return newAttendee;
     }
