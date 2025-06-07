@@ -2,10 +2,7 @@ package uni.unitravelplaner.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.ZonedDateTime;
 import java.util.Set;
@@ -40,6 +37,7 @@ public class Trip
     @JsonIgnoreProperties("trip")
     private Set<Attendee> attendees;
 
+    @Setter
     @ManyToMany
     @JoinTable(
             name = "trips_cars",
@@ -52,4 +50,12 @@ public class Trip
     )
     @JsonIgnoreProperties("trips")
     private Set<Car> cars;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "trip")
+    @JsonIgnoreProperties("trip")
+    private Set<Accommodation> accommodations;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "trip")
+    @JsonIgnoreProperties("trip")
+    private Set<Activity> activities;
 }

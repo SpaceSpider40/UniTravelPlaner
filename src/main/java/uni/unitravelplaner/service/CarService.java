@@ -11,6 +11,9 @@ import uni.unitravelplaner.entity.Trip;
 import uni.unitravelplaner.entity.User;
 import uni.unitravelplaner.repository.CarRepository;
 
+import java.util.Optional;
+import java.util.Set;
+
 @Service
 @AllArgsConstructor
 public class CarService {
@@ -63,5 +66,9 @@ public class CarService {
         final var user = userService.getUser(id);
 
         return carRepository.findCarsByOwner(user, pageable);
+    }
+
+    public Page<Car> getCarPageForTrip(Trip trip, Pageable pageable) {
+        return carRepository.findCarsByTripsContaining(Set.of(trip), pageable);
     }
 }

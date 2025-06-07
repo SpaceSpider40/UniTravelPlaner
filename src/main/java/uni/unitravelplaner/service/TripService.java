@@ -4,15 +4,18 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uni.unitravelplaner.dto.trip.TripCreationDto;
 import uni.unitravelplaner.entity.Attendee;
+import uni.unitravelplaner.entity.Car;
 import uni.unitravelplaner.entity.Trip;
 import uni.unitravelplaner.entity.User;
 import uni.unitravelplaner.enums.AttendeeStatus;
 import uni.unitravelplaner.repository.TripRepository;
 
 import java.time.Instant;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -84,5 +87,43 @@ public class TripService {
         final var user = userService.getUser(id);
 
         return tripRepository.findAllByOrganizer(user, pageable);
+    }
+
+    public Page<Car> getCarPageForTrip(Long tId, Pageable pageable) {
+        final var trip = tripRepository.findById(tId).orElseThrow();
+
+        return carService.getCarPageForTrip(trip, pageable);
+    }
+
+    public Trip assignCar(Long tId, Long cId) {
+        final var trip = tripRepository.findById(tId).orElseThrow();
+        final var car = carService.getCar(cId);
+
+        if (car == null) throw new IllegalArgumentException("Car not found");
+
+        Set<Car> cars = trip.getCars();
+        cars.add(car);
+
+        trip.setCars(cars);
+
+        tripRepository.save(trip);
+
+        return trip;
+    }
+
+    public Trip removeCar(Long tId, Long cId) {
+        final var trip = tripRepository.findById(tId).orElseThrow();
+        final var car = carService.getCar(cId);
+
+        if (car == null) throw new IllegalArgumentException("Car not found");
+
+        Set<Car> cars = trip.getCars();
+        cars.remove(car);
+
+        trip.setCars(cars);
+
+        tripRepository.save(trip);
+
+        return trip;
     }
 }

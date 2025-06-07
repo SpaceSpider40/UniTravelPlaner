@@ -34,7 +34,7 @@ public class UserController {
         return ResponseEntity.ok(userService.createUser(dto));
     }
 
-    @PostMapping("/{uId}/attend/{aId}/accept")
+    @PostMapping("/{uId}/attendance/{aId}/accept")
     public ResponseEntity<Attendee> acceptInvite(@PathVariable Long uId, @PathVariable Long aId) {
 
         final var user = userService.getUser(uId);
@@ -46,6 +46,19 @@ public class UserController {
         }
 
         return ResponseEntity.ok(attendeeService.acceptAttendance(aId));
+    }
+
+    @PostMapping("/{uId}/attendance/{aId}/decline")
+    public ResponseEntity<Attendee> declineInvite(@PathVariable Long uId, @PathVariable Long aId) {
+        final var user = userService.getUser(uId);
+
+        final var attends = attendeeService.getAttendsForUser(user);
+
+        if (attends.stream().noneMatch(a -> a.getId().equals(aId))){
+            throw new IllegalArgumentException("user does not have an attendance with id " + aId);
+        }
+
+        return ResponseEntity.ok(attendeeService.declineAttendance(aId));
     }
 
     @GetMapping("")
@@ -69,7 +82,7 @@ public class UserController {
         return tripService.getTripsPageForUser(id, pageable);
     }
 
-    @GetMapping("/{id}/attendee")
+    @GetMapping("/{id}/attendance")
     public Page<Attendee> getAttendeePage(@PathVariable Long id,@RequestParam(required = false) AttendeeStatus attendeeStatus, Pageable pageable){
 
         if (attendeeStatus != null) {

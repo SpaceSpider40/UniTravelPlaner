@@ -37,4 +37,13 @@ public class AttendeeService {
     public List<Attendee> getAttendsForUser(User user) {
         return attendeeRepository.findAllByUser(user);
     }
+
+    public Attendee declineAttendance(Long aId) {
+        final Attendee attendee = attendeeRepository.findById(aId)
+                                                     .orElseThrow();
+        attendee.setStatus(AttendeeStatus.DECLINED);
+        attendeeRepository.save(attendee);
+
+        return attendee;
+    }
 }
