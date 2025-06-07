@@ -51,10 +51,12 @@ public class Trip
     @JsonIgnoreProperties("trips")
     private Set<Car> cars;
 
+    @Setter
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "trip")
     @JsonIgnoreProperties("trip")
     private Set<Accommodation> accommodations;
 
+    @Setter
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "trip")
     @JsonIgnoreProperties("trip")
     private Set<Activity> activities;

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.ZonedDateTime;
 
@@ -32,7 +33,8 @@ public class Accommodation {
 
     private Float price;
 
-    private boolean isBreakfastIncluded;
+    @ColumnDefault("false")
+    private boolean isBreakfastIncluded = false;
 
     @ManyToOne(optional = false)
     private Trip trip;

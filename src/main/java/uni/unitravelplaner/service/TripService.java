@@ -7,10 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uni.unitravelplaner.dto.trip.TripCreationDto;
-import uni.unitravelplaner.entity.Attendee;
-import uni.unitravelplaner.entity.Car;
-import uni.unitravelplaner.entity.Trip;
-import uni.unitravelplaner.entity.User;
+import uni.unitravelplaner.entity.*;
 import uni.unitravelplaner.enums.AttendeeStatus;
 import uni.unitravelplaner.repository.TripRepository;
 
@@ -125,5 +122,32 @@ public class TripService {
         tripRepository.save(trip);
 
         return trip;
+    }
+
+    public Trip addAccommodation(Long id, Accommodation accommodation) {
+
+        final var trip = tripRepository.findById(id).orElseThrow();
+
+        Set<Accommodation> accommodations = trip.getAccommodations();
+        accommodations.add(accommodation);
+
+        trip.setAccommodations(accommodations);
+
+        tripRepository.save(trip);
+
+        return trip;
+    }
+
+    public Activity addActivity(Long id, Activity activity) {
+        final var trip = tripRepository.findById(id).orElseThrow();
+
+        Set<Activity> activities = trip.getActivities();
+        activities.add(activity);
+
+        trip.setActivities(activities);
+
+        tripRepository.save(trip);
+
+        return activity;
     }
 }

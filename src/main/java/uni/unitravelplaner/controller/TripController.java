@@ -1,6 +1,7 @@
 package uni.unitravelplaner.controller;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -8,9 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uni.unitravelplaner.dto.trip.TripCreationDto;
-import uni.unitravelplaner.entity.Attendee;
-import uni.unitravelplaner.entity.Car;
-import uni.unitravelplaner.entity.Trip;
+import uni.unitravelplaner.entity.*;
 import uni.unitravelplaner.service.CarService;
 import uni.unitravelplaner.service.TripService;
 
@@ -27,9 +26,21 @@ public class TripController {
         return ResponseEntity.ok(tripService.createTrip(dto));
     }
 
-    @PostMapping("{id}/invite")
+    @PostMapping("/{id}/invite")
     public ResponseEntity<Attendee> inviteUser(@PathVariable Long id, @RequestParam Long userId) {
         return ResponseEntity.ok(tripService.inviteUser(id, userId));
+    }
+
+    @PostMapping("/{id}/accommodation")
+    public ResponseEntity<Trip> addAccommodation(@PathVariable Long id,
+                                                 @RequestBody Accommodation accommodation)
+    {
+        return ResponseEntity.ok(tripService.addAccommodation(id, accommodation));
+    }
+
+    @PostMapping("/{id}/activity")
+    public ResponseEntity<Activity> postActivity(@PathVariable Long id, @RequestBody Activity activity) {
+        return ResponseEntity.ok(tripService.addActivity(id, activity));
     }
 
     @GetMapping
