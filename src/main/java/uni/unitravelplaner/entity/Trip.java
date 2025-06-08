@@ -52,12 +52,36 @@ public class Trip
     private Set<Car> cars;
 
     @Setter
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "trip")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "trip", fetch = FetchType.EAGER)
     @JsonIgnoreProperties("trip")
     private Set<Accommodation> accommodations;
 
     @Setter
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "trip")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "trip", fetch = FetchType.EAGER)
     @JsonIgnoreProperties("trip")
     private Set<Activity> activities;
+
+    public float getTotalCost() {
+        final float[] cost = {0};
+
+        if (accommodations != null) {
+            accommodations.forEach(accommodation -> {
+                Float price = accommodation.getPrice();
+                if (price != null) {
+                    cost[0] += price;
+                }
+            });
+        }
+
+        if (activities != null) {
+            activities.forEach(activity -> {
+                Float activityCost = activity.getCost();
+                if (activityCost != null) {
+                    cost[0] += activityCost;
+                }
+            });
+        }
+
+        return cost[0];
+    }
 }

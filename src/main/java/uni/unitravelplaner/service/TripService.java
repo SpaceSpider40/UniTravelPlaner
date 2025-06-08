@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import uni.unitravelplaner.dto.trip.TripAccommodationDto;
 import uni.unitravelplaner.dto.trip.TripCreationDto;
 import uni.unitravelplaner.entity.*;
 import uni.unitravelplaner.enums.AttendeeStatus;
@@ -124,9 +125,22 @@ public class TripService {
         return trip;
     }
 
-    public Trip addAccommodation(Long id, Accommodation accommodation) {
+    public Trip addAccommodation(Long id, TripAccommodationDto dto) {
 
         final var trip = tripRepository.findById(id).orElseThrow();
+
+        final var accommodation = Accommodation.builder()
+                .name(dto.name)
+                .description(dto.description)
+                .address(dto.address)
+                .city(dto.city)
+                .country(dto.country)
+                .link(dto.link)
+                .begin(dto.begin)
+                .end(dto.end)
+                .trip(trip)
+                .price(dto.price)
+                .build();
 
         Set<Accommodation> accommodations = trip.getAccommodations();
         accommodations.add(accommodation);

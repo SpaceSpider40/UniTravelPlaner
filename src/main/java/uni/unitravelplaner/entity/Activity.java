@@ -1,4 +1,4 @@
-﻿package uni.unitravelplaner.entity;
+package uni.unitravelplaner.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -26,6 +26,7 @@ public class Activity {
     private String link;
 
     private ZonedDateTime start;
+    @Column(name = "_end")
     private ZonedDateTime end;
 
     private Float cost;

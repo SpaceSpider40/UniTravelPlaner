@@ -8,9 +8,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import uni.unitravelplaner.dto.trip.TripAccommodationDto;
 import uni.unitravelplaner.dto.trip.TripCreationDto;
 import uni.unitravelplaner.entity.*;
+import uni.unitravelplaner.entity.statistics.TripStatistics;
 import uni.unitravelplaner.service.CarService;
+import uni.unitravelplaner.service.StatisticsService;
 import uni.unitravelplaner.service.TripService;
 
 @AllArgsConstructor
@@ -20,6 +23,7 @@ public class TripController {
 
     private final TripService tripService;
     private final CarService carService;
+    private final StatisticsService statisticsService;
 
     @PostMapping({"", "/"})
     public ResponseEntity<Trip> postTrip(@RequestBody TripCreationDto dto) {
@@ -33,7 +37,7 @@ public class TripController {
 
     @PostMapping("/{id}/accommodation")
     public ResponseEntity<Trip> addAccommodation(@PathVariable Long id,
-                                                 @RequestBody Accommodation accommodation)
+                                                 @RequestBody TripAccommodationDto accommodation)
     {
         return ResponseEntity.ok(tripService.addAccommodation(id, accommodation));
     }
@@ -72,5 +76,10 @@ public class TripController {
     @GetMapping("/{tId}/cars/remove/{cId}")
     public ResponseEntity<Trip> removeCar(@PathVariable Long tId, @PathVariable Long cId) {
         return ResponseEntity.ok(tripService.removeCar(tId, cId));
+    }
+
+    @GetMapping("/statistics")
+    public ResponseEntity<TripStatistics> getTripStatistics(){
+        return ResponseEntity.ok(statisticsService.getCurrentTripStatistics());
     }
 }

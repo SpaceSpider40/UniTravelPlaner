@@ -1,10 +1,7 @@
 package uni.unitravelplaner.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.ZonedDateTime;
@@ -14,7 +11,7 @@ import java.time.ZonedDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Getter
+@Data
 public class Accommodation {
 
     @Id
@@ -29,6 +26,7 @@ public class Accommodation {
     private String link;
 
     private ZonedDateTime begin;
+    @Column(name = "_end")
     private ZonedDateTime end;
 
     private Float price;
@@ -36,6 +34,6 @@ public class Accommodation {
     @ColumnDefault("false")
     private boolean isBreakfastIncluded = false;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Trip trip;
 }
