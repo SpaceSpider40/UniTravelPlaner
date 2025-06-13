@@ -34,6 +34,11 @@ public class UserController {
         return ResponseEntity.ok(userService.createUser(dto));
     }
 
+    @PostMapping("{uId}/car/{cId}/remove")
+    public ResponseEntity<Boolean> removeUser(@PathVariable Long uId, @PathVariable Long cId) {
+        return ResponseEntity.ok(carService.removeCar(uId, cId));
+    }
+
     @PostMapping("/{uId}/attendance/{aId}/accept")
     public ResponseEntity<Attendee> acceptInvite(@PathVariable Long uId, @PathVariable Long aId) {
 

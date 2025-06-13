@@ -3,11 +3,12 @@ package uni.unitravelplaner.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
+import uni.unitravelplaner.enums.TripStatus;
 
 import java.time.ZonedDateTime;
 import java.util.Set;
 
-@Getter
+@Data
 @Entity
 @Table(name = "trips")
 @Builder
@@ -60,6 +61,9 @@ public class Trip
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "trip", fetch = FetchType.EAGER)
     @JsonIgnoreProperties("trip")
     private Set<Activity> activities;
+
+    @Enumerated(EnumType.STRING)
+    private TripStatus status = TripStatus.PENDING;
 
     public float getTotalCost() {
         final float[] cost = {0};

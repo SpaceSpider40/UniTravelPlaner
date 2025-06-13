@@ -8,11 +8,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uni.unitravelplaner.dto.trip.TripAccommodationDto;
 import uni.unitravelplaner.dto.trip.TripCreationDto;
+import uni.unitravelplaner.dto.trip.TripEditionDto;
 import uni.unitravelplaner.entity.*;
 import uni.unitravelplaner.enums.AttendeeStatus;
+import uni.unitravelplaner.enums.TripStatus;
 import uni.unitravelplaner.repository.TripRepository;
 
 import java.time.Instant;
+import java.time.ZoneId;
 import java.util.Set;
 
 @Service
@@ -56,6 +59,10 @@ public class TripService {
                               .startDate(dto.startDate)
                               .endDate(dto.endDate)
                               .organizer(organizer)
+                              .created(Instant.now()
+                                              .atZone(ZoneId.systemDefault()))
+                              .updated(Instant.now()
+                                              .atZone(ZoneId.systemDefault()))
                               .build();
 
         tripRepository.save(trip);
@@ -69,9 +76,9 @@ public class TripService {
         final User user = userService.getUser(userId);
 
         final var newAttendee = Attendee.builder()
-                                     .user(user)
-                .status(AttendeeStatus.INVITED)
-                                     .build();
+                                        .user(user)
+                                        .status(AttendeeStatus.INVITED)
+                                        .build();
 
         final var attendees = trip.getAttendees();
         attendees.add(newAttendee);
@@ -88,13 +95,15 @@ public class TripService {
     }
 
     public Page<Car> getCarPageForTrip(Long tId, Pageable pageable) {
-        final var trip = tripRepository.findById(tId).orElseThrow();
+        final var trip = tripRepository.findById(tId)
+                                       .orElseThrow();
 
         return carService.getCarPageForTrip(trip, pageable);
     }
 
     public Trip assignCar(Long tId, Long cId) {
-        final var trip = tripRepository.findById(tId).orElseThrow();
+        final var trip = tripRepository.findById(tId)
+                                       .orElseThrow();
         final var car = carService.getCar(cId);
 
         if (car == null) throw new IllegalArgumentException("Car not found");
@@ -110,7 +119,8 @@ public class TripService {
     }
 
     public Trip removeCar(Long tId, Long cId) {
-        final var trip = tripRepository.findById(tId).orElseThrow();
+        final var trip = tripRepository.findById(tId)
+                                       .orElseThrow();
         final var car = carService.getCar(cId);
 
         if (car == null) throw new IllegalArgumentException("Car not found");
@@ -127,20 +137,21 @@ public class TripService {
 
     public Trip addAccommodation(Long id, TripAccommodationDto dto) {
 
-        final var trip = tripRepository.findById(id).orElseThrow();
+        final var trip = tripRepository.findById(id)
+                                       .orElseThrow();
 
         final var accommodation = Accommodation.builder()
-                .name(dto.name)
-                .description(dto.description)
-                .address(dto.address)
-                .city(dto.city)
-                .country(dto.country)
-                .link(dto.link)
-                .begin(dto.begin)
-                .end(dto.end)
-                .trip(trip)
-                .price(dto.price)
-                .build();
+                                               .name(dto.name)
+                                               .description(dto.description)
+                                               .address(dto.address)
+                                               .city(dto.city)
+                                               .country(dto.country)
+                                               .link(dto.link)
+                                               .begin(dto.begin)
+                                               .end(dto.end)
+                                               .trip(trip)
+                                               .price(dto.price)
+                                               .build();
 
         Set<Accommodation> accommodations = trip.getAccommodations();
         accommodations.add(accommodation);
@@ -153,7 +164,8 @@ public class TripService {
     }
 
     public Activity addActivity(Long id, Activity activity) {
-        final var trip = tripRepository.findById(id).orElseThrow();
+        final var trip = tripRepository.findById(id)
+                                       .orElseThrow();
 
         Set<Activity> activities = trip.getActivities();
         activities.add(activity);
@@ -163,5 +175,66 @@ public class TripService {
         tripRepository.save(trip);
 
         return activity;
+    }
+
+    public Trip editTrip(TripEditionDto dto) {
+        final var trip = getTrip(dto.getId());
+
+        if (dto.getTitle() != null && !dto.getTitle()
+                                          .isBlank()) {
+            trip.setTitle(dto.getTitle());
+        }
+
+        if (dto.getDescription() != null && !dto.getDescription()
+                                                .isBlank()) {
+            trip.setDescription(dto.getDescription());
+        }
+
+        if (dto.getStartDate() != null && !dto.getStartDate()
+                                              .isBefore(Instant.now()
+                                                               .atZone(dto.getStartDate()
+                                                                          .getZone()))) {
+            trip.setStartDate(dto.getStartDate());
+
+        }
+
+        if (dto.getEndDate() != null && !dto.getEndDate()
+                                            .isBefore(dto.getStartDate())) {
+            trip.setEndDate(dto.getEndDate());
+        }
+
+        trip.setUpdated(Instant.now()
+                               .atZone(ZoneId.systemDefault()));
+
+        tripRepository.save(trip);
+
+        return trip;
+    }
+
+    public Boolean cancelTrip(Long id) {
+        final Trip trip = getTrip(id);
+
+        trip.setStatus(TripStatus.CANCELLED);
+
+        tripRepository.save(trip);
+
+        return true;
+    }
+
+    public Trip startTrip(Long id) {
+        final Trip trip = getTrip(id);
+
+        trip.setStatus(TripStatus.ACTIVE);
+
+        tripRepository.save(trip);
+
+        return trip;
+    }
+
+    public Trip finishTrip(Long id) {
+        final Trip trip = getTrip(id);
+        trip.setStatus(TripStatus.FINISHED);
+        tripRepository.save(trip);
+        return trip;
     }
 }

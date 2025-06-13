@@ -71,4 +71,20 @@ public class CarService {
     public Page<Car> getCarPageForTrip(Trip trip, Pageable pageable) {
         return carRepository.findCarsByTripsContaining(Set.of(trip), pageable);
     }
+
+    public Boolean removeCar(Long userId, Long carId) {
+        final User user = userService.getUser(userId);
+
+        if (user == null) throw new IllegalArgumentException("User not found");
+
+        final Optional<Car> car = carRepository.findById(carId);
+
+        if (car.isEmpty()) throw new IllegalArgumentException("Car not found");
+
+        if (!car.get().getOwner().equals(user)) throw new IllegalArgumentException("User does not own car");
+
+        carRepository.delete(car.get());
+
+        return true;
+    }
 }
